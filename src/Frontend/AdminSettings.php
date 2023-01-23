@@ -327,6 +327,11 @@ class AdminSettings
             // Walk over the current presets configured by the admin and add, update or delete addressbooks
             foreach ($this->presets as $presetName => $preset) {
                 try {
+                    $preset = rcube::get_instance()->plugins->exec_hook('carddav_init_preset', $preset);
+                    if (isset($preset['skip_preset'])) {
+                        continue;
+                    }
+                    
                     $logger->info("Adding/Updating preset $presetName for user $userId");
 
                     // Map URL => ID of the existing extra addressbooks in the DB for this preset
